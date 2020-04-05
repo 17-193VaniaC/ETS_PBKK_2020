@@ -11,25 +11,74 @@
 		Petrichor
 	</div>
 	<div class="loggout"><a href="logout.php">
-
-
 		<?php
-		// session_start();
 		// if(!isset($_SESSION["loggedin"])){
 		echo "Logout";
+		$total=0;
 #		echo "<img style="width: 20px; height: 20px;padding-left: 30px;" src="https://www.iconsdb.com/icons/preview/white/logout-xxl.png">
 		// }
-		// else{
-		// echo "Login";
-		// }
-
-
-		?>
-	</a>
-	</div>
+		// else{// echo "Login";}?>
+	</a></div>
 </div>
 
 
+<?php
+$total=0;
+$conn = new PDO("mysql:host=localhost;dbname=petrichor", 'root', '');		
+$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+$action = isset($_GET['action'])?$_GET['action']:"";
+if($action=='cart' && $_SERVER['REQUEST_METHOD']=='POST') {
+	
+	$query = "SELECT * FROM menu WHERE id_m=:id_m";
+	$stmt = $conn->prepare($query);
+	$stmt->bindParam('id_m', $_POST['id_m']);
+	$stmt->execute();
+	$smenu = $stmt->fetch();
+	$currentQty = $_SESSION['products'][$_POST['id_m']]['qnty']+1; //Incrementing the product qty in cart
+	$_SESSION['products'][$_POST['id_m']] =array( 'qnty'=>$currentQty,'name'=>$smenu['m_name'],'price'=>$smenu['price']);
+	$smenu='';
+	header("Location:admin");
+}
+
+if($action=='cancel') {
+	$_SESSION['products'] =array();
+	header("Location:admin");	
+}
+
+if($action=='remove') {
+	$id_m = $_GET['id_m'];
+	$ssmenu = $_SESSION['products'];
+	unset($ssmenu[$id_m]);
+	$_SESSION['products']= $ssmenu;
+	header("Location:admin");	
+}
+$query = "SELECT * FROM menu";
+$stmt = $conn->prepare($query);
+$stmt->execute();
+$ssmenu = $stmt->fetchAll();
+
+if(isset($_POST['do_trans'])){
+	$itter=1;
+	foreach ($_SESSION['products'] as $items):
+		$sql="Select id_trans from transaction where trans_date=current_date() order by id_trans limit 1";
+		$sth= $db->query($sql);
+		$result=mysqli_fetch_array($sth);
+		if($itter==1){
+		$lastid=$result["id_trans"]+1;}
+		else
+			{$itter=2;}
+		$keyy=key($items);
+		$db = mysqli_connect("localhost","root","","petrichor");
+		$sql = "INSERT INTO transaction (id_trans, trans_date, trans_time, item_id, quantity, price_per_item) values('$lastid',current_date(),'00:00:00', '$keyy', ".$items["qnty"].", ".$items["price"].")";
+		$hupla = mysqli_query($db, $sql);
+	endforeach;
+	$_SESSION['products'] =array();
+	header("Location:admin");	
+	}
+?>
+
+<!-- SIDEBAR -->
 <div class="left-bar">
 	<div class="sm-c-bar">
 	<div class="sm-c">
@@ -56,46 +105,37 @@
 
 <br><br><br><br>
 
+
+<!-- DAFTAR MENU -->
 <div class="sales">
 	<div class="title">
-<h3 style="text-align: center;" ">
-	Menu Hidangan	
-</h3>
+		<h3 style="text-align: center;" ">Menu Hidangan</h3>
+	<button class=""><a href="<?php echo site_url('admin?action=cancel')?>">CANCEL</a></button>
 	</div>
-	<?php foreach ($menus as $menu):?>
-									<div class="subsales">
-											<?php echo $menu->m_name ?>
-										<br>
-											<img src="<?php echo base_url('upload/product/'.$menu->picture) ?>" width="80%" height="80%" style="object-fit: fill;" /><br>
+    <div class="container" style="width:600px;">
+<?php if (isset($hupla)){print $hupla;} ?>
+	
+<?php foreach ($menus as $menu):?>
+
+
+								<div class="subsales">										
+									<?php echo $menu->m_name; ?><br>
+										<img src="<?php echo base_url('upload/product/'.$menu->picture); ?>" width="80%" height="70%" style="object-fit: fill;" /><br>
 									<tr>
-										<td>
-											<?php echo $menu->price ?></td>
-									</tr>
-									<br>
-								<!-- 	<button>
-											<a href="<?php echo site_url('admin/products/edit/'.$menu->id_m) ?>"
-											 class="btn btn-small"><i class="fas fa-edit"></i> Edit</a>
-									</button>
-									<button>
-											<a onclick="deleteConfirm('<?php echo site_url('admin/product/delete/'.$menu->id_m) ?>')"
-											 href="#!" class="btn btn-small text-danger"><i class="fas fa-trash"></i> Hapus</a>
-									</button> -->
-									</div>
-	<?php  endforeach; ?>
-<!-- <?php      
-			$db = mysqli_connect("localhost","root","","petrichor");
-			$sql = "SELECT * FROM menu WHERE available= 1";
-			$sth = $db->query($sql);
-			while ($result=mysqli_fetch_array($sth)){
-			echo '<div class="subsales">';
-			echo $result['m_name'];
-			echo '</div>';
-			}
-?> -->
+										<td><?php echo $menu->price; ?></td>
+									</tr><br>
+										<form method="post" action="<?php echo site_url('admin?action=cart')?>">
+											<button type="submit" class="add-to-cart-button">Tambah</button>
+											 <input type="hidden" name="id_m" value="<?php print $menu->id_m?>"></form>
+										</form>
+
+									<br><br><br>
+								</div>
+	<?php endforeach; ?>
+</div>
 </div>
 
-
-
+<!-- CARTNYA -->
 <div class="sales2">
 	<div class="title">
 	<h3 style="text-align: center;">
@@ -112,23 +152,37 @@
 		<th style="text-align:right;" width="10%">Price</th>
 		<th style="text-align:center;" width="5%">Remove</th>
 	</tr>	
+
+<!-- MULAIDISINI -->
+<?php if(!empty($_SESSION['products'])): foreach ($_SESSION['products'] as $idmenu => $menux):?>
 	<tr>
-		<td>
-		NAMA
-		</td>
-			<td>
-		1
-		</td>
-			<td>
-		20000
-		</td>
-			<td>
-		20000
-		</td>
-			<td>
-		X
-		</td>
+		<?php  
+		echo "<td>";
+		echo $menux["name"];
+		echo "</td><td width='5%''>";
+		echo  $menux["qnty"];
+		echo "</td><td width='20%'>";
+		echo $menux["price"];
+		echo "</td><td width='10%'>";
+		$hhupla = $menux['price']*$menux['qnty'];
+		echo $hhupla;
+		echo "</td>";
+		?>
+		<td><a class='remove-link' style="color: red;" href='admin?action=remove&id_m=<?php print $idmenu?>'> X </a></td>
 	</tr>
+	<?php $total= $total+$hhupla;?>
+<?php endforeach;
+endif;?>
+<tr style="background-color: pink;">
+	<td style="font-size: 17px;">
+		<b> Total </b>
+	</td>
+	<td style="font-size: 17px;""><?php if(isset($total))echo $total; ?></td>
+</tr>
+<tr><td>	
+<form action="admin" method="post" ><button type="submit" class="add-to-cart-button">Pay</button></form></tr>
+</td>
+
 	</tbody>
 <tabel>
 
