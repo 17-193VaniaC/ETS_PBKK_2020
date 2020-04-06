@@ -20,6 +20,10 @@ a{
 	color: white;
 }
 
+a .remove-link{
+	color: red;
+}
+
 
 
 .head{
@@ -94,8 +98,8 @@ a{
 
 .subsales{
 	width: 31%;
-	height: 200px;
 	background-color: #8995ad;
+	height: 220px;
 	display: inline;
 	float: left;
 	margin-left: 2%; 
@@ -186,4 +190,18 @@ a .add-button:hover{
 	color: white;
 	width: 100px;
 	height: 30px;
+}
+
+.add-to-cart-button{
+	width: 150px;
+	height: 25px;
+	background-color: orange;
+}
+
+.cancel-button{
+	width: 100px;
+	height: 30px;
+	background: red;
+	background-color: red;
+	color: black;
 }

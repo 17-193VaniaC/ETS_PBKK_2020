@@ -36,7 +36,7 @@ if($action=='cart' && $_SERVER['REQUEST_METHOD']=='POST') {
 	$stmt->execute();
 	$smenu = $stmt->fetch();
 	$currentQty = $_SESSION['products'][$_POST['id_m']]['qnty']+1; //Incrementing the product qty in cart
-	$_SESSION['products'][$_POST['id_m']] =array( 'qnty'=>$currentQty,'name'=>$smenu['m_name'],'price'=>$smenu['price']);
+	$_SESSION['products'][$_POST['id_m']] =array('id_m'=>$smenu['id_m'], 'qnty'=>$currentQty,'name'=>$smenu['m_name'],'price'=>$smenu['price']);
 	$smenu='';
 	header("Location:admin");
 }
@@ -53,29 +53,29 @@ if($action=='remove') {
 	$_SESSION['products']= $ssmenu;
 	header("Location:admin");	
 }
-$query = "SELECT * FROM menu";
-$stmt = $conn->prepare($query);
-$stmt->execute();
-$ssmenu = $stmt->fetchAll();
-
-if(isset($_POST['do_trans'])){
+if($action=='save'){
+		$db = mysqli_connect("localhost","root","","petrichor");
 	$itter=1;
 	foreach ($_SESSION['products'] as $items):
-		$sql="Select id_trans from transaction where trans_date=current_date() order by id_trans limit 1";
+		$sql="Select id_trans from transaction where trans_date=current_date() order by id_trans desc limit 1";
 		$sth= $db->query($sql);
 		$result=mysqli_fetch_array($sth);
 		if($itter==1){
-		$lastid=$result["id_trans"]+1;}
-		else
-			{$itter=2;}
+		$lastid=$result["id_trans"]+1;
+		$itter=2;}
 		$keyy=key($items);
-		$db = mysqli_connect("localhost","root","","petrichor");
-		$sql = "INSERT INTO transaction (id_trans, trans_date, trans_time, item_id, quantity, price_per_item) values('$lastid',current_date(),'00:00:00', '$keyy', ".$items["qnty"].", ".$items["price"].")";
+		$sql = "INSERT INTO transaction (id_trans, trans_date, trans_time, item_id, quantity, price_per_item) values('$lastid',current_date(), localtime() , ".$items["id_m"].", ".$items["qnty"].", ".$items["price"].")";
 		$hupla = mysqli_query($db, $sql);
 	endforeach;
 	$_SESSION['products'] =array();
 	header("Location:admin");	
 	}
+$query = "SELECT * FROM menu";
+$stmt = $conn->prepare($query);
+$stmt->execute();
+$ssmenu = $stmt->fetchAll();
+
+
 ?>
 
 <!-- SIDEBAR -->
@@ -94,13 +94,7 @@ if(isset($_POST['do_trans'])){
 			</a>
 		</div>
 	</div>
-	<div class="sm-c-bar"><br>
-				<div class="sm-c">
-			<a href="<?php echo site_url('admin/report') ?>">
-		Catatan Transaksi
-		</a>
-		</div>
-	</div>
+	
 </div>
 
 <br><br><br><br>
@@ -110,7 +104,7 @@ if(isset($_POST['do_trans'])){
 <div class="sales">
 	<div class="title">
 		<h3 style="text-align: center;" ">Menu Hidangan</h3>
-	<button class=""><a href="<?php echo site_url('admin?action=cancel')?>">CANCEL</a></button>
+	
 	</div>
     <div class="container" style="width:600px;">
 <?php if (isset($hupla)){print $hupla;} ?>
@@ -176,13 +170,15 @@ endif;?>
 <tr style="background-color: pink;">
 	<td style="font-size: 17px;">
 		<b> Total </b>
-	</td>
+	</td><td></td><td></td>
 	<td style="font-size: 17px;""><?php if(isset($total))echo $total; ?></td>
 </tr>
 <tr><td>	
-<form action="admin" method="post" ><button type="submit" class="add-to-cart-button">Pay</button></form></tr>
+<form action="admin?action=save" method="post" ><button type="submit" class="save-button">Pay</button></form>
 </td>
+<td></td><td></td><td><button class="cancel-button"><a href="<?php echo site_url('admin?action=cancel')?>">CANCEL</a></button></td>
 
+</tr>
 	</tbody>
 <tabel>
 

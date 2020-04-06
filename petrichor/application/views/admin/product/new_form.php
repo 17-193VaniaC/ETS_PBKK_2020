@@ -45,13 +45,7 @@
 			</a>
 		</div>
 	</div>
-	<div class="sm-c-bar"><br>
-				<div class="sm-c">
-			<a href="<?php echo site_url('admin/report') ?>">
-		Catatan Transaksi
-		</a>
-		</div>
-	</div>
+
 </div>
 
 <br><br><br><br>
