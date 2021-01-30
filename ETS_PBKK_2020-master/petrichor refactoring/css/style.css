@@ -1,0 +1,207 @@
+
+body{
+	color: black;
+	font-family: sans-serif;;
+	background-color: #ccd0d9;
+}
+table.hupla{
+
+	border: 1px solid black;
+	font-size: 12px;
+	height: auto;
+	width: 100%;
+	border-color: black;
+	padding: 3px;
+
+}
+
+a{
+	text-decoration: none;
+	color: white;
+}
+
+a .remove-link{
+	color: red;
+}
+
+
+
+.head{
+	width: 100%;
+	height: 15%;
+	background-color: #132940;
+	left: 0;
+	top: 0;
+	position: fixed;
+	font-size: 40px;
+	color: white;
+}
+
+.upper-menu{
+	
+	font-family: "Times New Roman", Times, serif;
+	padding-top: 2%;
+	margin-left: 20px;
+	width: 40%;
+	display:inline;
+	float:left;
+}
+.loggout {
+	width: 55%;
+	height: auto;
+	text-align: right;
+	position: fixed;
+	display:inline;
+	float:left;
+	font-size: 20px;
+	padding-top: 2%;
+}
+
+.left-bar{
+	font-family: sans-serif;
+	width: 10%;
+	color: white;		
+	font-size: 17px;	
+	background-color: black;
+	text-align: center;
+	position: fixed;
+	height: 100%;	
+	left: 0;
+	top: 15%;
+}
+
+.sm-c-bar{
+	width: 100%;
+	background-color: black; 
+}
+
+.sm-c-bar:hover{
+	background-color: #132940; 
+}
+
+.sm-c{
+	padding: 20px 16px;
+}
+.sales{
+	text-align: center;
+	background-color: white;
+	float: left;
+	border: 2px solid black;
+	font-size: 15px;
+	height: 700px;
+	width: 50%;
+	border-color: black;
+	margin-left: 12%;
+	margin-top: 5%;
+	display: inline;
+}
+
+.subsales{
+	width: 31%;
+	background-color: #8995ad;
+	height: 220px;
+	display: inline;
+	float: left;
+	margin-left: 2%; 
+	margin-top: 2%
+}
+
+.sales2{
+	background-color: white;
+	float: left;
+	position: absolute;
+	border: 2px solid black;
+	font-size: 15px;
+	height: auto;
+	width: 28%;
+	border-color: black;
+	display: inline;
+	margin-top: 5%;
+	margin-left: 3px;
+}
+
+.sales3{
+	text-align: center;
+	background-color: white;
+	float: left;
+	border: 2px 2px 2px 2px;
+	border-color: #707070;
+	font-size: 15px;
+	height: auto;
+	width: 80%;
+	margin-left: 12%;
+	margin-top: 4%;
+	display: inline;
+}
+
+.subsales2{
+	width: 193px;
+	height: auto;
+	background-color: #8995ad;
+	display: inline;
+	float: left;
+	margin: 1%;
+}
+.new-form{
+text-align: center;
+margin-left: 80px;
+}
+
+.form-control{
+		width: 100%;
+
+}
+.sales table{
+
+}
+
+.title{
+background-color: black;
+color: white;
+width: 200;
+padding:2px;
+}
+
+.edit-button{
+	background-color: blue;
+}
+
+.delete-button{
+	background-color: red;
+}
+
+a .add-button{
+	background-color: #3bbf48;
+	border: none;
+	width: 150px;
+	height: 30px;
+}
+
+
+a .add-button:hover{
+	background-color: #5479ff;
+	border: none;
+	width: 150px;
+	height: 30px;
+}
+
+.save-button{
+	background-color: green;
+	color: white;
+	width: 100px;
+	height: 30px;
+}
+
+.add-to-cart-button{
+	width: 150px;
+	height: 25px;
+	background-color: orange;
+}
+
+.cancel-button{
+	width: 100px;
+	height: 30px;
+	background: red;
+	background-color: red;
+	color: black;
+}
